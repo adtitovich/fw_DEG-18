@@ -47,7 +47,7 @@ create table nds.branch (
 --таблица товаров
 create table nds.product (
 	product_id int primary key,
-	productline_id int not nullreferences nds.productline(productline_id) on delete restrict on update cascade,
+	productline_id int not null references nds.productline(productline_id) on delete restrict on update cascade,
 	unitprice decimal(20,2) not null-- цена за еденицу товара не включая налог
 	);
 	
@@ -65,7 +65,7 @@ create table nds.order (
 	branch_id int not null references nds.branch (branch_id) on delete restrict on update cascade,
     customer_id int not null references nds.customer (customer_id) on delete restrict on update cascade,
 	product_id int not null references nds.product(product_id) on delete restrict on update cascade,
-	paymenttype_id not null int references nds.paymenttype(paymenttype_id) on delete restrict on update cascade,
+	paymenttype_id int not null references nds.paymenttype(paymenttype_id) on delete restrict on update cascade,
 	invoice varchar(250) not null, -- номер счета
 	quantity int not null, -- кол-во товара
 	tax decimal(20,4) not null, -- налог
