@@ -2,13 +2,16 @@
 
 
  YOUR_SPARK_HOME/bin/spark-submit \
+  --properties-file credentials.properties \
   --class "fwdds" \
   etl_fw_deg-18_2.13-1.0.jar
 */
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import java.util.Properties
+
+import java.nio.charset.StandardCharsets
+import java.util.{Base64, Properties}
 
 
 object fwdds {
@@ -25,12 +28,13 @@ object fwdds {
     println("- - - - - - - - - - - - - - - - - - - ")
     println("Spark Session has been created")
 
-    // инициализация записи в postgresql
+    // инициализация postgresql
     val dbProps = new Properties()
     dbProps.put("connectionURL", "jdbc:postgresql://192.168.0.25:5433/supermarket")
     dbProps.put("driver", "org.postgresql.Driver")
     dbProps.put("user", "postgres")
-    dbProps.put("password", "example")
+    val password = new String(Base64.getDecoder().decode(spark.conf.get("spark.jdbc.password")), StandardCharsets.UTF_8)
+    dbProps.put("password", password)
 
     val connectionURL = dbProps.getProperty("connectionURL")
 
